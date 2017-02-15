@@ -6,6 +6,13 @@
   tags:
     - openstack-backup-retention
 
+- name: Remove backup ssh key files the older than retention day
+  command: |
+    find "{{ osa_backup_remote_sshkey_dir }}" -mindepth 1 -maxdepth 1 -type d \
+    -ctime +"{{ osa_backup_sshkey_retention_day }}" -exec rm -rf {} +
+  tags:
+    - openstack-backup-sshkey-retention
+
 # TODO Will change retention to find module when OSA use Ansible version 2
 # - name: Find directory that older than retention
 #   find:

@@ -1,4 +1,5 @@
 ---
 - include: backup_galera.yml
+- include: backup_sshkey.yml
 - include: backup_retention.yml
 - include: backup_cron.yml

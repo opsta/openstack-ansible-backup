@@ -1,0 +1,47 @@
+---
+- name: Create backup directory on deployment node
+  file:
+    path: "{{ osa_backup_remote_sshkey_dir }}"
+    state: directory
+    mode: 0755
+  delegate_to: "{{ groups['log_hosts'] }}"
+  tags:
+    - openstack-backup-sshkey
+
+- name: Make sure sshkey backup directory on this server exists
+  file:
+    path: "{{ osa_backup_sshkey_dir }}"
+    state: directory
+    mode: 0755
+  tags:
+    - openstack-backup-sshkey
+
+- name: Store id_rsa
+  slurp:
+    src: "/root/.ssh/id_rsa"
+  register: _idrsa
+  when: groups['log_hosts']
+- name: Copy id_rsa file into backup directory
+  copy:
+    content: "{{ _idrsa.content | b64decode }}"
+    dest: "{{ osa_backup_remote_sshkey_dir }}"
+  when: groups['log_hosts']
+
+# Can not use synchronize module on Ansible 2.0 or 2.1 because of this bug
+# https://github.com/ansible/ansible/issues/17492
+#- name: Move backup files from galera container to this server
+#  synchronize:
+#    src: "root@{{ hostvars[groups['galera_all'][0]]['ansible_ssh_host'] }}:{{ osa_backup_remote_galera_dir }}/"
+#    dest: "{{ osa_backup_galera_dir }}/"
+#  tags:
+#    - openstack-backup-galera
+#    - openstack-backup-galera-sync
+
+# Use rsync command instead of synchronize module
+- name: Move backup files from deployment node to this server
+  command: "rsync -aze 'ssh -o StrictHostKeyChecking=no'
+    root@{{ hostvars[groups['log_hosts']['ansible_ssh_host'] }}:{{ osa_backup_remote_sshkey_dir }}/
+    {{ osa_backup_sshkey_dir }}/"
+  tags:
+    - openstack-backup-sshkey
+    - openstack-backup-sshkey-sync

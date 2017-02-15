@@ -3,6 +3,10 @@ osa_backup_galera_dir: /openstack/backup/galera
 osa_backup_remote_galera_dir: "{{ osa_backup_galera_dir }}"
 osa_backup_galera_retention_day: 7
 
+osa_backup_sshkey_dir: /openstack/backup/ssh
+osa_backup_remote_sshkey_dir: "{{ osa_backup_deployment_dir }}"
+osa_backup_sshkey_retention_day: 30
+
 osa_backup_cron_minute: "0"
 osa_backup_cron_hour: "2"
 osa_backup_cron_day: "*"
