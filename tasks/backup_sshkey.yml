@@ -23,5 +23,5 @@ block: # Backup deployment SSH key
       dest: "{{ osa_backup_sshkey_dir }}"
     when: groups['log_hosts'] and not id_rsa_file.stat.exists
 
-  tags:
-    - openstack-backup-sshkey
+  - tags:
+      - openstack-backup-sshkey

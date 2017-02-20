@@ -22,8 +22,9 @@
   - name: Backup galera server database
     shell: innobackupex --compress --compress-threads=8 "{{ osa_backup_remote_galera_dir }}"
     delegate_to: "{{ groups['galera_all'][0] }}"
-  tags:
-    - openstack-backup-galera
+
+  - tags:
+      - openstack-backup-galera
 
 # Can not use synchronize module on Ansible 2.0 or 2.1 because of this bug
 # https://github.com/ansible/ansible/issues/17492
