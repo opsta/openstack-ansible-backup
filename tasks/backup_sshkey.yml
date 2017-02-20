@@ -16,14 +16,9 @@
   tags:
     - openstack-backup-sshkey
 
-- name: Store id_rsa
-  slurp:
-    src: "/root/.ssh/id_rsa"
-  register: _idrsa
-  when: groups['log_hosts']
-- name: Copy id_rsa file into backup directory
+- name: Copy file in /root/ssh to backup path
   copy:
-    content: "{{ _idrsa.content | b64decode }}"
+    src: /root/.ssh/
     dest: "{{ osa_backup_remote_sshkey_dir }}"
   when: groups['log_hosts']
 
