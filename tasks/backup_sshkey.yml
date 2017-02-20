@@ -4,7 +4,7 @@
     path: "{{ osa_backup_remote_sshkey_dir }}"
     state: directory
     mode: 0755
-  delegate_to: "{{ groups['log_hosts'] }}"
+  delegate_to: "{{ groups['log_hosts'][0] }}"
   tags:
     - openstack-backup-sshkey
 
