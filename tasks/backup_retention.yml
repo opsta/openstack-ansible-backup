@@ -6,7 +6,6 @@
   tags:
     - openstack-backup-retention
 
-
 # TODO Will change retention to find module when OSA use Ansible version 2
 # - name: Find directory that older than retention
 #   find:
