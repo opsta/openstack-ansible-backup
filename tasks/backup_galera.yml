@@ -1,30 +1,30 @@
 ---
 - block: # Backup galera database
-  - name: Delete backup directory on galera container
-    file:
-      path: "{{ osa_backup_remote_galera_dir }}"
-      state: absent
-    delegate_to: "{{ groups['galera_all'][0] }}"
+    - name: Delete backup directory on galera container
+      file:
+        path: "{{ osa_backup_remote_galera_dir }}"
+        state: absent
+      delegate_to: "{{ groups['galera_all'][0] }}"
 
-  - name: Create backup directory on galera container
-    file:
-      path: "{{ osa_backup_remote_galera_dir }}"
-      state: directory
-      mode: 0755
-    delegate_to: "{{ groups['galera_all'][0] }}"
+    - name: Create backup directory on galera container
+      file:
+        path: "{{ osa_backup_remote_galera_dir }}"
+        state: directory
+        mode: 0755
+      delegate_to: "{{ groups['galera_all'][0] }}"
 
-  - name: Make sure galera backup directory on this server exists
-    file:
-      path: "{{ osa_backup_galera_dir }}"
-      state: directory
-      mode: 0755
+    - name: Make sure galera backup directory on this server exists
+      file:
+        path: "{{ osa_backup_galera_dir }}"
+        state: directory
+        mode: 0755
 
-  - name: Backup galera server database
-    shell: innobackupex --compress --compress-threads=8 "{{ osa_backup_remote_galera_dir }}"
-    delegate_to: "{{ groups['galera_all'][0] }}"
+    - name: Backup galera server database
+      shell: innobackupex --compress --compress-threads=8 "{{ osa_backup_remote_galera_dir }}"
+      delegate_to: "{{ groups['galera_all'][0] }}"
 
-  - tags:
-      - openstack-backup-galera
+  tags:
+    - openstack-backup-galera
 
 # Can not use synchronize module on Ansible 2.0 or 2.1 because of this bug
 # https://github.com/ansible/ansible/issues/17492
