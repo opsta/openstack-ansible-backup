@@ -1,27 +1,15 @@
 ---
 - block: # Backup deployment SSH key
-    - name: Create backup directory on deployment node
-      file:
-        path: "{{ osa_backup_sshkey_dir }}"
-        state: directory
-        mode: 0755
-
     - name: Make sure sshkey backup directory on this server exists
       file:
         path: "{{ osa_backup_sshkey_dir }}"
         state: directory
         mode: 0755
 
-    - name: Check if id_rsa ssh key file exists
-      stat:
-        path: "{{ osa_backup_sshkey_dir }}/id_rsa"
-      register: id_rsa_file
-
     - name: Copy file in /root/ssh to backup path
       copy:
         src: /root/.ssh/
         dest: "{{ osa_backup_sshkey_dir }}"
-      when: groups['log_hosts'] and not id_rsa_file.stat.exists
 
   tags:
     - openstack-backup-sshkey
