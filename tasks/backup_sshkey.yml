@@ -14,7 +14,7 @@
 
     - name: Check if id_rsa ssh key file exists
       stat:
-        path: /root/.ssh/id_rsa
+        path: "{{ osa_backup_sshkey_dir }}/id_rsa"
       register: id_rsa_file
 
     - name: Copy file in /root/ssh to backup path
