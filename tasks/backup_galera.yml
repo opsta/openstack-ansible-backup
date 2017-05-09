@@ -39,7 +39,7 @@
 # Use rsync command instead of synchronize module
 - name: Move backup files from galera container to this server
   command: "rsync -aze 'ssh -o StrictHostKeyChecking=no'
-    root@{{ hostvars[groups['galera_all'][0]]['ansible_ssh_host'] }}:{{ osa_backup_remote_galera_dir }}/
+    root@{{ hostvars[groups['galera_all'][0]]['ansible_host'] }}:{{ osa_backup_remote_galera_dir }}/
     {{ osa_backup_galera_dir }}/"
   tags:
     - openstack-backup-galera
