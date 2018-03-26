@@ -4,14 +4,14 @@
       file:
         path: "{{ osa_backup_remote_galera_dir }}"
         state: absent
-      delegate_to: "{{ groups['galera_all'][0] }}"
+      delegate_to: "{{ groups['galera_all'] | last }}"
 
     - name: Create backup directory on galera container
       file:
         path: "{{ osa_backup_remote_galera_dir }}"
         state: directory
         mode: 0755
-      delegate_to: "{{ groups['galera_all'][0] }}"
+      delegate_to: "{{ groups['galera_all'] | last }}"
 
     - name: Make sure galera backup directory on this server exists
       file:
@@ -21,7 +21,7 @@
 
     - name: Backup galera server database
       shell: innobackupex --compress --compress-threads=8 "{{ osa_backup_remote_galera_dir }}"
-      delegate_to: "{{ groups['galera_all'][0] }}"
+      delegate_to: "{{ groups['galera_all'] | last }}"
 
   tags:
     - openstack-backup-galera
@@ -30,7 +30,7 @@
 # https://github.com/ansible/ansible/issues/17492
 #- name: Move backup files from galera container to this server
 #  synchronize:
-#    src: "root@{{ hostvars[groups['galera_all'][0]]['ansible_ssh_host'] }}:{{ osa_backup_remote_galera_dir }}/"
+#    src: "root@{{ hostvars[groups['galera_all'] | last]['ansible_ssh_host'] }}:{{ osa_backup_remote_galera_dir }}/"
 #    dest: "{{ osa_backup_galera_dir }}/"
 #  tags:
 #    - openstack-backup-galera
@@ -39,7 +39,7 @@
 # Use rsync command instead of synchronize module
 - name: Move backup files from galera container to this server
   command: "rsync -aze 'ssh -o StrictHostKeyChecking=no'
-    root@{{ hostvars[groups['galera_all'][0]]['ansible_host'] }}:{{ osa_backup_remote_galera_dir }}/
+    root@{{ hostvars[groups['galera_all'] | last]['ansible_host'] }}:{{ osa_backup_remote_galera_dir }}/
     {{ osa_backup_galera_dir }}/"
   tags:
     - openstack-backup-galera
